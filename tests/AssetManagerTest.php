@@ -160,7 +160,10 @@ final class AssetManagerTest extends TestCase
         $bundle = new SourceAsset();
 
         $sourcePath = $this->aliases->get($bundle->sourcePath);
-        $hash = $this->getPublishedHash($sourcePath . FileHelper::lastModifiedTime($sourcePath), $this->publisher);
+        $sourcePath = $sourcePath . FileHelper::lastModifiedTime($sourcePath) .
+            iterator_count(new \FilesystemIterator($sourcePath, \FilesystemIterator::SKIP_DOTS));
+
+        $hash = $this->getPublishedHash($sourcePath, $this->publisher);
 
         $this->assertEmpty($this->getRegisteredBundles($this->manager));
         $this->manager->register(SourceAsset::class);
@@ -185,7 +188,10 @@ final class AssetManagerTest extends TestCase
         $bundle = new SourceAsset();
 
         $sourcePath = $this->aliases->get($bundle->sourcePath);
-        $hash = $this->getPublishedHash($sourcePath . FileHelper::lastModifiedTime($sourcePath), $this->publisher);
+        $sourcePath = $sourcePath . FileHelper::lastModifiedTime($sourcePath) .
+            iterator_count(new \FilesystemIterator($sourcePath, \FilesystemIterator::SKIP_DOTS));
+
+        $hash = $this->getPublishedHash($sourcePath, $this->publisher);
 
         $this->assertEmpty($this->getRegisteredBundles($this->manager));
 
@@ -516,7 +522,10 @@ final class AssetManagerTest extends TestCase
     {
         $bundle = new ExportAsset();
         $sourcePath = $this->aliases->get($bundle->sourcePath);
-        $hash = $this->getPublishedHash($sourcePath . FileHelper::lastModifiedTime($sourcePath), $this->publisher);
+        $sourcePath = $sourcePath . FileHelper::lastModifiedTime($sourcePath) .
+            iterator_count(new \FilesystemIterator($sourcePath, \FilesystemIterator::SKIP_DOTS));
+
+        $hash = $this->getPublishedHash($sourcePath, $this->publisher);
 
         $this->assertSame(
             $this->aliases->get("@assetUrl/{$hash}/css/stub.css"),

@@ -244,7 +244,12 @@ final class AssetPublisher implements AssetPublisherInterface
             return ($this->hashCallback)($path);
         }
 
-        $path = (is_file($path) ? dirname($path) : $path) . FileHelper::lastModifiedTime($path);
+        if (is_file($path)) {
+            $path = dirname($path);
+        }
+
+        $path = $path . FileHelper::lastModifiedTime($path) . iterator_count(new \FilesystemIterator($path,
+                \FilesystemIterator::SKIP_DOTS));
 
         return sprintf('%x', crc32($path . '|' . $this->linkAssets));
     }

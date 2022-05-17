@@ -32,10 +32,15 @@ final class AssetPublisherTest extends TestCase
         $bundle = new SourceAsset();
 
         $sourcePath = $this->aliases->get($bundle->sourcePath);
-        $hash = $this->getPublishedHash(
-            (is_file($sourcePath) ? dirname($sourcePath) : $sourcePath) . FileHelper::lastModifiedTime($sourcePath),
-            $this->publisher,
-        );
+
+        if (is_file($sourcePath)) {
+            $sourcePath =  dirname($sourcePath);
+        }
+
+        $sourcePath = $sourcePath . FileHelper::lastModifiedTime($sourcePath) .
+            iterator_count(new \FilesystemIterator($sourcePath, \FilesystemIterator::SKIP_DOTS));
+
+        $hash = $this->getPublishedHash($sourcePath, $this->publisher);
 
         $manager = $this->manager->withLoader(
             $this->loader->withCssDefaultOptions(['media' => 'none'])->withJsDefaultPosition(2),
